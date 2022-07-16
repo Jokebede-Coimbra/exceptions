@@ -1,11 +1,11 @@
-package tratamento.excecoes.exercicio.teste;
+package tratamento.excecoes.model.application;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-import tratamento.excecoes.exercicio.domain.Reservation;
+import tratamento.excecoes.model.entities.Reservation;
 
 public class ReservationMain {
     public static void main(String[] args) throws ParseException {
@@ -16,30 +16,27 @@ public class ReservationMain {
         System.out.println("Room number: ");
         int number = sc.nextInt();
         System.out.println("Check-in date (dd/MM/yyyy): ");
-        Date in = sdf.parse(sc.next());
+        Date checkIn = sdf.parse(sc.next());
         System.out.println("Check-out date (dd/MM/yyyy): ");
-        Date out = sdf.parse(sc.next());
+        Date checkOut = sdf.parse(sc.next());
 
-        if (!out.after(in)) {
+        if (!checkOut.after(checkIn)) {
             System.out.println("Error in reservation: Check-out date must be after check-in date");
         } else {
-            Reservation reservation = new Reservation(number, in, out);
+            Reservation reservation = new Reservation(number, checkIn, checkOut);
             System.out.println("Reservation: " + reservation);
 
             System.out.println();
             System.out.println("Enter data to update the reservation: ");
             System.out.println("Check-in date (dd/MM/yyyy): ");
-            in = sdf.parse(sc.next());
+            checkIn = sdf.parse(sc.next());
             System.out.println("Check-out date (dd/MM/yyyy): ");
-            out = sdf.parse(sc.next());
+            checkOut = sdf.parse(sc.next());
 
-            Date now = new Date();
-            if (in.before(now) || out.before(now)) {
-                System.out.println("Error in reservation: Reservation dates for update must be future dates");
-            } else if (!out.after(in)) {
-                System.out.println("Error in reservation: Check-out date must be after check-in date");
+            String error = reservation.updateDates(checkIn, checkOut);
+            if (error != null) {
+                System.out.println("Error in reservation: " + error);
             } else {
-                reservation.updateDates(in, out);
                 System.out.println("Reservation: " + reservation);
             }
 
